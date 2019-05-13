@@ -9,7 +9,6 @@
         <module name="config" />
         <module name="eureka-server" />
         <module name="restful" />
-        <module name="simplemall-proj" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

@@ -10,6 +10,7 @@
 		<groupId>com.sap</groupId>
 		<artifactId>config-server</artifactId>
 		<version>1.0-SNAPSHOT</version>
+        <relativePath>../configserver/pom.xml</relativePath>
 	</parent>
 
     <dependencies>
