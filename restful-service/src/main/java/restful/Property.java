@@ -18,6 +18,12 @@ public class Property {
     @Field("updateDate")
     private String updateDate;
 
+
+    public Property() {
+        this.createDate = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+        this.updateDate = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+    }
+
     public Property (long server_uuid, String content) {
         this.server_uuid = server_uuid;
         this.content = content;
@@ -27,6 +33,10 @@ public class Property {
 
     public long getServer_uuid() {
         return server_uuid;
+    }
+
+    public void setServer_uuid(long server_uuid) {
+        this.server_uuid = server_uuid;
     }
 
     public String getContent() {

@@ -41,19 +41,20 @@ public class PropertyController {
         Query query = Query.query(Criteria.where("_id").is(Long.valueOf(id).longValue()));
         Property property = mongoTemplate.findOne(query, Property.class);
         return property.getContent();
-
     }
 
+
     @RequestMapping(method = RequestMethod.POST)
-    public String addPropery(@RequestParam(value="id", defaultValue="World") long id, @RequestParam(value="content", defaultValue="World") String content) {
-        mongoTemplate.insert(new Property(id, content));
+    public String addPropery(@RequestBody Property property) {
+        mongoTemplate.insert(property);
         return "finish";
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
-    public void deletePropery(@RequestParam(value="name", defaultValue="World") Long id) {
+    public String deletePropery(@RequestParam(value="name", defaultValue="World") Long id) {
         Query query = Query.query(Criteria.where("_id").is(id));
         mongoTemplate.remove(query, Property.class);
+        return "ok";
     }
 
     @RequestMapping(method = RequestMethod.PUT)
