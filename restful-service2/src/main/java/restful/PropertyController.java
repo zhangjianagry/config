@@ -36,7 +36,7 @@ public class PropertyController {
                 sb.append(property.getServer_uuid() + ":" + property.getContent());
                 sb.append("\n");
             }
-            return sb.toString();
+            return sb.toString()+"from server 2";
         }
         Query query = Query.query(Criteria.where("_id").is(Long.valueOf(id).longValue()));
         Property property = mongoTemplate.findOne(query, Property.class);
