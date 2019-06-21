@@ -1,4 +1,4 @@
 .DS_Store
 .idea/
-vue-admin/node_modules/
+front-end/node_modules/
 *.iml
