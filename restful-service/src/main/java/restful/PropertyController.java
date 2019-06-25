@@ -3,9 +3,10 @@ package restful;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -29,7 +30,7 @@ public class PropertyController {
 */
 
     @RequestMapping(method = RequestMethod.GET)
-    public String getPropery(@RequestParam(value="id", defaultValue="all") String id) {
+    public String getProperty(@RequestParam(value="id", defaultValue="all") String id) {
         LOG.log(Level.INFO, "Get config information");
         if (id.equals("all")) {
             Query query = new Query();
@@ -49,21 +50,21 @@ public class PropertyController {
 
 
     @RequestMapping(method = RequestMethod.POST)
-    public String addPropery(@RequestBody Property property) {
+    public String addProperty(@RequestBody Property property) {
         LOG.log(Level.INFO, "Put config information");
         mongoTemplate.insert(property);
         return "finish";
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
-    public String deletePropery(@RequestParam(value="name", defaultValue="World") Long id) {
+    public String deleteProperty(@RequestParam(value="name", defaultValue="World") Long id) {
         Query query = Query.query(Criteria.where("_id").is(id));
         mongoTemplate.remove(query, Property.class);
         return "ok";
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public void updatePropery(@RequestParam(value="id", defaultValue="World") long id, @RequestParam(value="content", defaultValue="World") String content) {
+    public void updateProperty(@RequestParam(value="id", defaultValue="World") long id, @RequestParam(value="content", defaultValue="World") String content) {
         Query query = Query.query(Criteria.where("_id").is(id));
         Update update = Update.update("content", content).set("updateDate",new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
         mongoTemplate.updateFirst(query, update, Property.class);

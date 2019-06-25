@@ -28,7 +28,6 @@ public class consumerController {
     @RequestMapping(method = RequestMethod.GET)
     public String getTest(@RequestParam(value="id", defaultValue="all") String id){
         return   restTemplate.getForObject("http://RESTFUL-API/config/?id="+id,String.class);
-
     }
 
 
