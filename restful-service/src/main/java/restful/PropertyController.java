@@ -3,6 +3,8 @@ package restful;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/config/")
 public class PropertyController {
 
+    private static final Logger LOG = Logger.getLogger(RestfulApiApplication.class.getName());
     @Autowired
     private MongoTemplate mongoTemplate;
 /*
@@ -27,6 +30,7 @@ public class PropertyController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String getPropery(@RequestParam(value="id", defaultValue="all") String id) {
+        LOG.log(Level.INFO, "Get config information");
         if (id.equals("all")) {
             Query query = new Query();
             query.with(new Sort(Sort.Direction.DESC, "_id"));
@@ -46,6 +50,7 @@ public class PropertyController {
 
     @RequestMapping(method = RequestMethod.POST)
     public String addPropery(@RequestBody Property property) {
+        LOG.log(Level.INFO, "Put config information");
         mongoTemplate.insert(property);
         return "finish";
     }
