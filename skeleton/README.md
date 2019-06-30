@@ -5,18 +5,14 @@ Well, I met some troubles when accessing the mogoDB server and I cannot understa
 
 ## Basic
 
-Since all the module is nearly a placeholder for deployment, I only implement the basic feature.
+Since all the modules is nearly a placeholder for deployment, I only implement the basic feature.
 
 ## How to test
 
-Deploy or run `customer` locally with
+Deploy or run `customer` locally with `node server.js` (node env required)
 
-```shell
-node server.js
-```
-
-GET method `http://23.100.97.156:9080/config`  to get value
-PUT method `http://23.100.97.156:9080/config?testconfig=newvalue`  to update value, and the customer will receive 'newvalue'
+- GET method `http://23.100.97.156:9080/config`  to get value
+- PUT method `http://23.100.97.156:9080/config?testconfig=newvalue`  to update value, and the customer will receive 'newvalue'
 
 ## Service
 
