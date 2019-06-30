@@ -53,6 +53,7 @@ exports.login = function(ip, port, strategy, auth, secret) {
 exports.config = function(val, param, defVal) {
 	// here the client need to request the value immediately
 	val[param] = defVal;
+	console.log("binded");
 	observable.subscribe({
 		next: x => val[param] = x
 	});

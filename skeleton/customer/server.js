@@ -3,12 +3,13 @@ const app = express();
 const client = require('vt-config-toy-client');
 const port = 3001;
 
+
 //config object
 var testValue = {
 };
 
 //login
-client.login('127.0.0.1', '8090', 'webSocket', 'secret', 'vt');
+client.login('23.100.97.156', '9080', 'webSocket', 'secret', 'vt');
 //bind the value
 client.config(testValue, 'testconfig', 'default');
 

@@ -1,6 +1,10 @@
 import React from 'react';
 import request from 'request';
 
+
+var configHost = process.env.SERVICE_SERVICE_HOST;
+
+var configAddress = 'http://' + configHost + ':9080';
 class GetConfig extends React.Component{
     constructor(props){
         super(props);
@@ -11,7 +15,8 @@ class GetConfig extends React.Component{
     }
 
     getConfig() {
-        fetch('http://127.0.0.1:8090/config')
+        console.log(configAddress);
+        fetch(configAddress + '/config')
         .then(res => res.json())
         .then(res => this.setState({
             config: res.testconfig
@@ -45,8 +50,7 @@ class PutConfig extends React.Component{
     }
 
     putConfig() {
-        let query = "?testconfig=" + this.state.config;
-        request.put("http://127.0.0.1:8090/config" + query);
+
     }
 
     render(){

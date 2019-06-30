@@ -2,3 +2,5 @@ customer/node_modules/
 client/node_modules/
 service/node_modules/
 auth/node_modules/
+frontend/frontend2/
+frontend/frontend/node_modules/

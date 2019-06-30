@@ -9,7 +9,15 @@ app.use(express.urlencoded());
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-const authServer = 'http://127.0.0.1:8092/auth';
+
+
+
+var authHost = process.env.AUTH_SERVICE_HOST;
+
+var authAddress = 'http://' + authHost + ':9080';
+// var authAddress = "tcp://127.0.0.1:8091"
+
+const authServer = authAddress + '/auth';
 const port = 8090;
 
 // a simple one2one publisher-subscriber pattern
@@ -77,6 +85,25 @@ app.put('/config', (req, res) => {
         pb.notify(newConfig["testconfig"]);
     }
     res.send(config,201);
+});
+
+//test
+app.get('/testport', (req, res) => {
+    res.send(authAddress);
+});
+
+//test
+app.get('/testconnect', (req, res) => {
+    request.get(
+        authAddress + '/test',
+        (error, ress, body) => {
+            if( ress.statusCode == 201){
+                res.send("ok")
+            } else {
+                res.send("wrong")
+            }
+        }
+    );
 });
 
 server.listen(port);
