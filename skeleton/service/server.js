@@ -67,6 +67,8 @@ app.get('/config', (req, res) => {
 // PUT config
 app.put('/config', (req, res) => {
     var newConfig = req.query;
+    console.log(newConfig);
+    
     config = newConfig;
     if(pb.isBinded()){
         // if config is changed, notify the client through websocket channel immediately

@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const client = require('vt-config-toy-client');
-const port = 3000;
+const port = 3001;
 
 //config object
 var testValue = {

@@ -11,7 +11,7 @@
 <script type="text/javascript">
 
 (function getConfig() {
-    fetch('http://localhost:3000/config')
+    fetch('http://127.0.0.1:3001/config')
     .then(res => res.text())
     .then(res => document.getElementById("config").innerHTML = res);
 

@@ -51,6 +51,7 @@ exports.login = function(ip, port, strategy, auth, secret) {
  * @param {*} defVal 	the default val
  */
 exports.config = function(val, param, defVal) {
+	// here the client need to request the value immediately
 	val[param] = defVal;
 	observable.subscribe({
 		next: x => val[param] = x
