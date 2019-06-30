@@ -1,14 +1,16 @@
 {
-  "name": "vt-config-toy-client",
+  "name": "rest",
   "version": "1.0.0",
-  "description": "a toy client package published for vt project. Personal use.",
-  "main": "vt-config-toy-client.js",
+  "description": "",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "walker",
+  "author": "",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.17.1",
+    "request": "^2.88.0",
     "rxjs": "^6.5.2",
     "ws": "^7.0.1"
   }
