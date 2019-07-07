@@ -4,13 +4,13 @@
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-form :inline="true" :model="filters">
 				<el-form-item>
-					<el-input v-model="filters.name" placeholder="姓名"></el-input>
+					<el-input v-model="filters.name" placeholder="serviceID"></el-input>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" v-on:click="getUsers">查询</el-button>
+					<el-button type="primary" v-on:click="getUsers">search</el-button>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" @click="handleAdd">新增</el-button>
+					<el-button type="primary" @click="handleAdd">add</el-button>
 				</el-form-item>
 			</el-form>
 		</el-col>
@@ -21,20 +21,20 @@
 			</el-table-column>
 			<el-table-column type="index" width="60">
 			</el-table-column>
-			<el-table-column prop="name" label="姓名" width="120" sortable>
+			<el-table-column prop="name" label="serviceID" width="240" sortable>
 			</el-table-column>
-			<el-table-column prop="sex" label="性别" width="100" :formatter="formatSex" sortable>
+			<el-table-column prop="sex" label="attr1" width="100" :formatter="formatSex" sortable>
 			</el-table-column>
-			<el-table-column prop="age" label="年龄" width="100" sortable>
+			<el-table-column prop="age" label="attr2" width="100" sortable>
 			</el-table-column>
-			<el-table-column prop="birth" label="生日" width="120" sortable>
+			<el-table-column prop="birth" label="lastModify" width="150" sortable>
 			</el-table-column>
-			<el-table-column prop="addr" label="地址" min-width="180" sortable>
+			<el-table-column prop="addr" label="DB_url" min-width="180" sortable>
 			</el-table-column>
 			<el-table-column label="操作" width="150">
 				<template scope="scope">
-					<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+					<el-button size="small" @click="handleEdit(scope.$index, scope.row)">edit</el-button>
+					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">delete</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -49,22 +49,22 @@
 		<!--编辑界面-->
 		<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
 			<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-				<el-form-item label="姓名" prop="name">
+				<el-form-item label="serviceID" prop="name">
 					<el-input v-model="editForm.name" auto-complete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="性别">
+				<el-form-item label="attr1">
 					<el-radio-group v-model="editForm.sex">
-						<el-radio class="radio" :label="1">男</el-radio>
-						<el-radio class="radio" :label="0">女</el-radio>
+						<el-radio class="radio" :label="1">true</el-radio>
+						<el-radio class="radio" :label="0">false</el-radio>
 					</el-radio-group>
 				</el-form-item>
-				<el-form-item label="年龄">
+				<el-form-item label="attr2">
 					<el-input-number v-model="editForm.age" :min="0" :max="200"></el-input-number>
 				</el-form-item>
-				<el-form-item label="生日">
+				<el-form-item label="lastModify">
 					<el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
 				</el-form-item>
-				<el-form-item label="地址">
+				<el-form-item label="DB_url">
 					<el-input type="textarea" v-model="editForm.addr"></el-input>
 				</el-form-item>
 			</el-form>
@@ -77,22 +77,22 @@
 		<!--新增界面-->
 		<el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
 			<el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-				<el-form-item label="姓名" prop="name">
+				<el-form-item label="ID" prop="name">
 					<el-input v-model="addForm.name" auto-complete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="性别">
+				<el-form-item label="attr1">
 					<el-radio-group v-model="addForm.sex">
 						<el-radio class="radio" :label="1">男</el-radio>
 						<el-radio class="radio" :label="0">女</el-radio>
 					</el-radio-group>
 				</el-form-item>
-				<el-form-item label="年龄">
+				<el-form-item label="attr2">
 					<el-input-number v-model="addForm.age" :min="0" :max="200"></el-input-number>
 				</el-form-item>
-				<el-form-item label="生日">
+				<el-form-item label="lastModify">
 					<el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
 				</el-form-item>
-				<el-form-item label="地址">
+				<el-form-item label="DB_url">
 					<el-input type="textarea" v-model="addForm.addr"></el-input>
 				</el-form-item>
 			</el-form>
@@ -125,7 +125,7 @@
 				editLoading: false,
 				editFormRules: {
 					name: [
-						{ required: true, message: '请输入姓名', trigger: 'blur' }
+						{ required: true, message: '请输入服务ID', trigger: 'blur' }
 					]
 				},
 				//编辑界面数据
@@ -142,7 +142,7 @@
 				addLoading: false,
 				addFormRules: {
 					name: [
-						{ required: true, message: '请输入姓名', trigger: 'blur' }
+						{ required: true, message: '请输入ID', trigger: 'blur' }
 					]
 				},
 				//新增界面数据
@@ -159,7 +159,7 @@
 		methods: {
 			//性别显示转换
 			formatSex: function (row, column) {
-				return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
+				return row.sex == 1 ? 'true' : row.sex == 0 ? 'false' : 'undefined';
 			},
 			handleCurrentChange(val) {
 				this.page = val;

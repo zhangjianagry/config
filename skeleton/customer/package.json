@@ -1,0 +1,15 @@
+{
+  "name": "customer",
+  "version": "1.0.0",
+  "description": "a stupid customer built by express and vt-toy-client",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "walker",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "vt-config-toy-client": "^1.0.0"
+  }
+}
