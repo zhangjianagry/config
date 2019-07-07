@@ -70,6 +70,7 @@
         <module>../restful-service</module>
         <module>../eureka</module>
         <module>../consumer</module>
+        <module>../authority</module>
     </modules>
 
 

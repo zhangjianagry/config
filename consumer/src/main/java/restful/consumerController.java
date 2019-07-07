@@ -17,7 +17,7 @@ public class consumerController {
 
 
 
-    @RequestMapping(value = "ok", method = RequestMethod.GET)
+    @RequestMapping(value = "/ok", method = RequestMethod.GET)
     public String getOk() {
         return resufulService.getOk();
     }
