@@ -69,7 +69,7 @@ public class UserController {
                 } else {
                     result.setCode(200);
                     result.setMessage("success");
-                    Date expiresAt = new Date(System.currentTimeMillis() + 3600 * 1000);
+                    Date expiresAt = new Date(System.currentTimeMillis() + 3600 * 1000 * 24);
                     String token = JWT.create()
                             .withClaim("username", username)
                             .withClaim("password", password).withExpiresAt(expiresAt).sign(Algorithm.HMAC256("test"));
