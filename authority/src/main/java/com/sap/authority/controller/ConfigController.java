@@ -28,8 +28,8 @@ public class ConfigController {
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(serviceId));
         Service service = mongoTemplate.findOne(query, Service.class);
-        List<Long> configs = service.getConfig();
-        configs.add(config.getConfig_id());
+        List<Config> configs = service.getConfig();
+        configs.add(config);
         service.setConfig(configs);
         mongoTemplate.save(service);
         return "add configs";

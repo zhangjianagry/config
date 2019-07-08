@@ -23,7 +23,7 @@ public class Service {
     @Field("updateDate")
     private String updateDate;
     @Field("config")
-    private List<Long> config;
+    private List<Config> config;
 
     public String getToken() {
         return token;
@@ -68,11 +68,11 @@ public class Service {
         this.description = description;
     }
 
-    public List<Long> getConfig() {
+    public List<Config> getConfig() {
         return config;
     }
 
-    public void setConfig(List<Long> config) {
+    public void setConfig(List<Config> config) {
         this.config = config;
     }
 
