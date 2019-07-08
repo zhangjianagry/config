@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Queue;
 
+@CrossOrigin
 @RestController
 public class ConfigController {
     @Autowired

@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 
+@CrossOrigin
 @RestController
 @EnableDiscoveryClient
 public class ServiceController {

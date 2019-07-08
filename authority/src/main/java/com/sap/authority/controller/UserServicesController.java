@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@CrossOrigin
 @RestController
 public class UserServicesController {
     @Autowired
