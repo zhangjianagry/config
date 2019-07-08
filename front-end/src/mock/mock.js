@@ -1,7 +1,7 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { LoginUsers, Users } from './data/user';
-let _Users = Users;
+import { LoginUsers, Services } from './data/data';
+let _Services = Services;
 
 export default {
   /**
@@ -43,45 +43,30 @@ export default {
       });
     });
 
-    //获取用户列表
-    mock.onGet('/user/list').reply(config => {
-      let {name} = config.params;
-      let mockUsers = _Users.filter(user => {
-        if (name && user.name.indexOf(name) == -1) return false;
-        return true;
-      });
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve([200, {
-            users: mockUsers
-          }]);
-        }, 1000);
-      });
-    });
 
-    //获取用户列表（分页）
-    mock.onGet('/user/listpage').reply(config => {
+    //获取服务列表
+    mock.onGet('/serv/listpage').reply(config => {
       let {page, name} = config.params;
-      let mockUsers = _Users.filter(user => {
-        if (name && user.name.indexOf(name) == -1) return false;
+      let mockServs = _Services.filter(serv => {
+        if (name && serv.name.indexOf(name) == -1) return false;
         return true;
       });
-      let total = mockUsers.length;
-      mockUsers = mockUsers.filter((u, index) => index < 20 * page && index >= 20 * (page - 1));
+      let total = mockServs.length;
+      mockServs = mockServs.filter((u, index) => index < 20 * page && index >= 20 * (page - 1));
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve([200, {
             total: total,
-            users: mockUsers
+            servs: mockServs
           }]);
         }, 1000);
       });
     });
 
-    //删除用户
-    mock.onGet('/user/remove').reply(config => {
+    //删除服务
+    mock.onGet('/serv/remove').reply(config => {
       let { id } = config.params;
-      _Users = _Users.filter(u => u.id !== id);
+      _Services = _Services.filter(u => u.id !== id);
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve([200, {
@@ -92,11 +77,11 @@ export default {
       });
     });
 
-    //批量删除用户
-    mock.onGet('/user/batchremove').reply(config => {
+    //批量删除服务
+    mock.onGet('/serv/batchremove').reply(config => {
       let { ids } = config.params;
       ids = ids.split(',');
-      _Users = _Users.filter(u => !ids.includes(u.id));
+      _Services = _Services.filter(u => !ids.includes(u.id));
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve([200, {
@@ -107,16 +92,15 @@ export default {
       });
     });
 
-    //编辑用户
-    mock.onGet('/user/edit').reply(config => {
-      let { id, name, addr, age, birth, sex } = config.params;
-      _Users.some(u => {
+    //编辑服务
+    mock.onGet('/serv/edit').reply(config => {
+      let { id, serviceID, addr, name, time } = config.params;
+      _Services.some(u => {
         if (u.id === id) {
-          u.name = name;
+          u.serviceID = serviceID;
           u.addr = addr;
-          u.age = age;
-          u.birth = birth;
-          u.sex = sex;
+          u.name = name;
+          u.time = time;
           return true;
         }
       });
@@ -130,15 +114,14 @@ export default {
       });
     });
 
-    //新增用户
-    mock.onGet('/user/add').reply(config => {
-      let { name, addr, age, birth, sex } = config.params;
-      _Users.push({
+    //新增服务
+    mock.onGet('/serv/add').reply(config => {
+      let { name, addr, serviceID, time } = config.params;
+      _Services.push({
         name: name,
         addr: addr,
-        age: age,
-        birth: birth,
-        sex: sex
+          serviceID: serviceID,
+        time: time,
       });
       return new Promise((resolve, reject) => {
         setTimeout(() => {
