@@ -61,4 +61,27 @@ public class ConfigController {
         mongoTemplate.save(service);
         return "update done";
     }
+
+    @RequestMapping(value = "/deleteConfig", method = RequestMethod.GET)
+    public String updateConfig(@RequestParam(value = "configId") long configId,
+                               @RequestParam(value = "serviceId") long serviceId) {
+
+        Query query = Query.query(Criteria.where("_id").is(configId));
+        mongoTemplate.remove(query, Config.class);
+
+
+
+        Query query1 = Query.query(Criteria.where("_id").is(serviceId));
+        Service service = mongoTemplate.findOne(query1, Service.class);
+        for (int i = 0; i < service.getConfig().size(); i++) {
+            Config config = service.getConfig().get(i);
+            if (config.getConfig_id() == configId) {
+                service.getConfig().remove(i);
+                break;
+            }
+        }
+        mongoTemplate.save(service);
+        return "delete done";
+    }
+
 }
