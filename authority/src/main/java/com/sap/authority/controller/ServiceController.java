@@ -42,7 +42,7 @@ public class ServiceController {
     }
 
     @RequestMapping(value = "/createService", method = RequestMethod.POST)
-    public String createServices(@RequestBody Service service,
+    public Service createServices(@RequestBody Service service,
                                  @RequestParam("userId") long UserId) {
         if (service != null) {
             //写入service表
@@ -50,15 +50,12 @@ public class ServiceController {
                 mongoTemplate.insert(service);
                 //写入user service表
                 Long serviceId =  service.getServer_id();
-                return restTemplate.getForObject("http://AUTHORITY/addService?userId=" + UserId + "&serviceId=" + serviceId,
+                restTemplate.getForObject("http://AUTHORITY/addService?userId=" + UserId + "&serviceId=" + serviceId,
                         String.class);
-            } else {
-                return  "authentication failed";
+                return service;
             }
-
-        }else {
-            return "service is null";
         }
+        return null;
     }
 
     @RequestMapping(value = "/deleteService")

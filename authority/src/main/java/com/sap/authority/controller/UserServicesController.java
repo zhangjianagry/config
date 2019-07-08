@@ -78,6 +78,9 @@ public class UserServicesController {
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(user_id));
         UserServices userServices = mongoTemplate.findOne(query, UserServices.class);
+        if (userServices == null) {
+            return new ArrayList<Service>();
+        }
         List<Long> seriviceId = userServices.getServices();
         List<Service> res = new ArrayList<>();
         for (long id : seriviceId) {

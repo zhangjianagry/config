@@ -29,6 +29,9 @@ public class UserServices {
     }
 
     public List<Long> getServices() {
+        if (services == null) {
+            services = new ArrayList<>();
+        }
         return services;
     }
     public void setServices(List<Long> services) {
