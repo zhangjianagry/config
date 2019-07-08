@@ -38,7 +38,8 @@ public class ConfigController {
     }
 
     @RequestMapping(value = "/updateConfig", method = RequestMethod.POST)
-    public String updateConfig(@RequestBody Config config) {
+    public String updateConfig(@RequestBody Config config, @RequestParam(value = "serviceId") long serviceId) {
+        config.setModifiedDate(Calendar.getInstance().getTime());
         Query query = Query.query(Criteria.where("_id").is(config.getConfig_id()));
         Config rawConfig = mongoTemplate.findOne(query, Config.class);
         rawConfig.setKey(config.getKey());
@@ -47,7 +48,17 @@ public class ConfigController {
         rawConfig.setDescription(config.getDescription());
         rawConfig.setAttr1(config.getAttr1());
         rawConfig.setAttr2(config.getAttr2());
-        mongoTemplate.save(rawConfig);
+
+        Query query1 = Query.query(Criteria.where("_id").is(serviceId));
+        Service service = mongoTemplate.findOne(query1, Service.class);
+        for (int i = 0; i < service.getConfig().size(); i++) {
+            Config config1 = service.getConfig().get(i);
+            if (config1.getConfig_id() == config.getConfig_id()) {
+                service.getConfig().set(i, config);
+                break;
+            }
+        }
+        mongoTemplate.save(service);
         return "update done";
     }
 }
