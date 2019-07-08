@@ -8,18 +8,18 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Document(collection = "user_password")
 public class User {
     @Id
-    private long user_id;
+    private String user_id;
     @Field("username")
     private String username;
     @Field("password")
     private String password;
 
 
-    public long getUser_id() {
+    public String getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(long user_id) {
+    public void setUser_id(String  user_id) {
         this.user_id = user_id;
     }
     public String getUsername() {
@@ -44,7 +44,7 @@ public class User {
     }
 
     public User() {
-        this.user_id = RandomUtils.nextLong();
+        this.user_id = RandomUtils.nextLong() + "";
     }
 
     @Override

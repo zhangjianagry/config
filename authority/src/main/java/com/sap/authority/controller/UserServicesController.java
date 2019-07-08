@@ -25,18 +25,10 @@ public class UserServicesController {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    @RequestMapping(value = "/getServices")
-    public List<Long> getServices(@RequestParam("id") Long userId) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("userId").is(userId));
-        List<UserServices> userServices = mongoTemplate.find(query, UserServices.class);
-        return userServices == null ? new ArrayList<>() : userServices.get(0).getServices();
-    }
-
 
     @RequestMapping(value = "/addService", method = RequestMethod.GET)
-    public String addServices(@RequestParam("userId") Long userId,
-                                  @RequestParam("serviceId") Long serviceId) {
+    public String addServices(@RequestParam("userId") String userId,
+                                  @RequestParam("serviceId") String serviceId) {
         Query query = new Query();
         query.addCriteria(Criteria.where("userId").is(userId));
         UserServices userServices = mongoTemplate.findOne(query, UserServices.class);
@@ -44,7 +36,7 @@ public class UserServicesController {
             userServices = new UserServices();
             userServices.setUserId(userId);
         }
-        List<Long> services = userServices.getServices();
+        List<String> services = userServices.getServices();
         services.add(serviceId);
         userServices.setServices(services);
         mongoTemplate.save(userServices);
@@ -52,8 +44,8 @@ public class UserServicesController {
     }
 
     @RequestMapping(value = "/removeService")
-    public boolean removeServices(@RequestParam("userId") Long userId,
-                                     @RequestParam("serviceId") Long serviceId) {
+    public boolean removeServices(@RequestParam("userId") String userId,
+                                     @RequestParam("serviceId") String serviceId) {
         Query query = new Query();
         query.addCriteria(Criteria.where("userId").is(userId));
         UserServices userService = mongoTemplate.findOne(query, UserServices.class);
@@ -70,16 +62,16 @@ public class UserServicesController {
 
 
     @RequestMapping(value = "/getServices/{user_id}")
-    public List<Service> getServices(@PathVariable(name = "user_id") long user_id) {
+    public List<Service> getServices(@PathVariable(name = "user_id") String user_id) {
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(user_id));
         UserServices userServices = mongoTemplate.findOne(query, UserServices.class);
         if (userServices == null) {
             return new ArrayList<Service>();
         }
-        List<Long> seriviceId = userServices.getServices();
+        List<String> seriviceId = userServices.getServices();
         List<Service> res = new ArrayList<>();
-        for (long id : seriviceId) {
+        for (String id : seriviceId) {
             Query query1 = new Query();
             query1.addCriteria(Criteria.where("_id").is(id));
             Service tem = mongoTemplate.findOne(query1, Service.class);

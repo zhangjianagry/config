@@ -11,30 +11,30 @@ import java.util.List;
 public class UserServices {
     @Id
     @Field("userId")
-    private long userId;
+    private String userId;
     @Field("services")
-    private List<Long> services;
+    private List<String> services;
 
 
     public UserServices() {
-        this.services = new ArrayList<Long>();
+        this.services = new ArrayList<String>();
     }
 
-    public long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(long server_uuid) {
+    public void setUserId(String server_uuid) {
         this.userId = server_uuid;
     }
 
-    public List<Long> getServices() {
+    public List<String> getServices() {
         if (services == null) {
             services = new ArrayList<>();
         }
         return services;
     }
-    public void setServices(List<Long> services) {
+    public void setServices(List<String> services) {
         this.services = services;
     }
 }

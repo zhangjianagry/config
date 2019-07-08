@@ -35,7 +35,7 @@ public class ServiceController {
         return new RestTemplate();
     }
 
-    public boolean authentication(String token, long userId) {
+    public boolean authentication(String token, String userId) {
         Token TOKEN = new Token();
         TOKEN.setToken(token);
         TOKEN.setUser_id(userId);
@@ -44,7 +44,7 @@ public class ServiceController {
 
     @RequestMapping(value = "/createService", method = RequestMethod.POST)
     public Service createServices(@RequestBody Service service,
-                                 @RequestParam("userId") long UserId) {
+                                 @RequestParam("userId") String UserId) {
         if (service != null) {
             //写入service表
             if (authentication(service.getToken(), UserId)) {
@@ -60,8 +60,8 @@ public class ServiceController {
     }
 
     @RequestMapping(value = "/deleteService")
-    public String deleteServices(@RequestParam("service_id") Long serviceId,
-                                 @RequestParam("userId") long UserId) {
+    public String deleteServices(@RequestParam("service_id") String serviceId,
+                                 @RequestParam("userId") String UserId) {
             //删除user service表
             return restTemplate.getForObject("http://AUTHORITY//removeService?userId=" + UserId + "&serviceId=" + serviceId,
                     String.class);

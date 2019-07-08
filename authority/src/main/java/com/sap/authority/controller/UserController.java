@@ -39,7 +39,7 @@ public class UserController {
                 query.addCriteria(Criteria.where("username").is(username));
                 query.addCriteria(Criteria.where("password").is(password));
                 User user = mongoTemplate.findOne(query, User.class);
-                return user.getUser_id() == TOKEN.getUser_id();
+                return user.getUser_id().equals(TOKEN.getUser_id());
             } catch (Exception e) {
                 return false;
             }
