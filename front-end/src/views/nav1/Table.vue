@@ -4,10 +4,10 @@
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-form :inline="true" :model="filters">
 				<el-form-item>
-					<el-input v-model="filters.name" placeholder="serviceID"></el-input>
+					<el-input v-model="filters.serviceID" placeholder="serviceID"></el-input>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" v-on:click="getUsers">search</el-button>
+					<el-button type="primary" v-on:click="getServices">search</el-button>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" @click="handleAdd">add</el-button>
@@ -16,24 +16,20 @@
 		</el-col>
 
 		<!--列表-->
-		<el-table :data="users" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
+		<el-table :data="servs" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
 			<el-table-column type="selection" width="55">
 			</el-table-column>
 			<el-table-column type="index" width="60">
 			</el-table-column>
-			<el-table-column prop="name" label="serviceID" width="240" sortable>
+			<el-table-column prop="server_id" label="serviceID" width="240" sortable>
 			</el-table-column>
-			<el-table-column prop="sex" label="attr1" width="100" :formatter="formatSex" sortable>
+			<el-table-column prop="name" label="name" width="100" sortable>
 			</el-table-column>
-			<el-table-column prop="age" label="attr2" width="100" sortable>
+			<el-table-column prop="description" label="description" min-width="160" sortable>
 			</el-table-column>
-			<el-table-column prop="birth" label="lastModify" width="150" sortable>
-			</el-table-column>
-			<el-table-column prop="addr" label="DB_url" min-width="180" sortable>
-			</el-table-column>
-			<el-table-column label="操作" width="150">
+			<el-table-column label="action" width="160">
 				<template scope="scope">
-					<el-button size="small" @click="handleEdit(scope.$index, scope.row)">edit</el-button>
+					<el-button size="small" @click="showConfig(scope.$index, scope.row)">view</el-button>
 					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">delete</el-button>
 				</template>
 			</el-table-column>
@@ -46,138 +42,148 @@
 			</el-pagination>
 		</el-col>
 
-		<!--编辑界面-->
-		<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-			<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-				<el-form-item label="serviceID" prop="name">
-					<el-input v-model="editForm.name" auto-complete="off"></el-input>
+		<!--config列表界面-->
+		<el-dialog title="Config List" v-model="listFormVisible" :close-on-click-modal="false">
+			<el-table :data="configList" @cell-click="getConfig" highlight-current-row
+					  style="width: 100%; text-align: center;"
+					  >
+				<el-table-column prop="config_id" label="config" min-width="90" align="center" >
+				</el-table-column>
+			</el-table>
+		</el-dialog>
+
+		<!--config编辑界面-->
+		<el-dialog title="edit config" v-model="editFormVisible" :close-on-click-modal="false">
+			<el-form :model="objConfig" label-width="80px" :rules="editFormRules" ref="editForm">
+				<el-col :span="24">
+					<el-form-item label="configID">
+						<el-input v-model="objConfig.config_id" auto-complete="off"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="24">
+					<el-form-item label="modifyDate">
+						<el-date-picker type="date" placeholder="select" v-model="objConfig.modifiedDate"></el-date-picker>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item label="key">
+						<el-input v-model="objConfig.key" ></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item label="value">
+						<el-input v-model="objConfig.value" :min="0" :max="200"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-form-item label="description">
+					<el-input type="textarea" v-model="objConfig.description" ></el-input>
 				</el-form-item>
-				<el-form-item label="attr1">
-					<el-radio-group v-model="editForm.sex">
-						<el-radio class="radio" :label="1">true</el-radio>
-						<el-radio class="radio" :label="0">false</el-radio>
-					</el-radio-group>
-				</el-form-item>
-				<el-form-item label="attr2">
-					<el-input-number v-model="editForm.age" :min="0" :max="200"></el-input-number>
-				</el-form-item>
-				<el-form-item label="lastModify">
-					<el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
-				</el-form-item>
-				<el-form-item label="DB_url">
-					<el-input type="textarea" v-model="editForm.addr"></el-input>
-				</el-form-item>
+				<el-col :span="12">
+					<el-form-item label="attr1">
+						<el-input v-model="objConfig.attr1" :min="0" :max="200"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item label="attr2">
+						<el-input v-model="objConfig.attr2" :min="0" :max="200"></el-input>
+					</el-form-item>
+				</el-col>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
-				<el-button @click.native="editFormVisible = false">取消</el-button>
-				<el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
+				<el-button @click.native="editFormVisible = false">back</el-button>
+				<el-button type="primary" @click.native="configSubmit" :loading="editLoading">commit</el-button>
 			</div>
 		</el-dialog>
 
-		<!--新增界面-->
-		<el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
+		<!--service新增界面-->
+		<el-dialog title="add service" v-model="addFormVisible" :close-on-click-modal="false">
 			<el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-				<el-form-item label="ID" prop="name">
-					<el-input v-model="addForm.name" auto-complete="off"></el-input>
+				<el-form-item label="name">
+					<el-input v-model="addForm.name" :min="0" :max="200"></el-input>
 				</el-form-item>
-				<el-form-item label="attr1">
-					<el-radio-group v-model="addForm.sex">
-						<el-radio class="radio" :label="1">男</el-radio>
-						<el-radio class="radio" :label="0">女</el-radio>
-					</el-radio-group>
-				</el-form-item>
-				<el-form-item label="attr2">
-					<el-input-number v-model="addForm.age" :min="0" :max="200"></el-input-number>
-				</el-form-item>
-				<el-form-item label="lastModify">
-					<el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
-				</el-form-item>
-				<el-form-item label="DB_url">
+				<el-form-item label="discription">
 					<el-input type="textarea" v-model="addForm.addr"></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
-				<el-button @click.native="addFormVisible = false">取消</el-button>
-				<el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
+				<el-button @click.native="addFormVisible = false">back</el-button>
+				<el-button type="primary" @click.native="addSubmit" :loading="addLoading">commit</el-button>
 			</div>
 		</el-dialog>
 	</section>
 </template>
 
 <script>
+    import $ from 'jquery'
 	import util from '../../common/js/util'
 	//import NProgress from 'nprogress'
-	import { getUserListPage, removeUser, batchRemoveUser, editUser, addUser } from '../../api/api';
+	import { getServicesListPage, removeServ, batchRemoveServ, editServ, addServ } from '../../api/api';
 
 	export default {
 		data() {
 			return {
 				filters: {
-					name: ''
+                    serviceID: ''
 				},
-				users: [],
+				servs: [],
 				total: 0,
 				page: 1,
 				listLoading: false,
 				sels: [],//列表选中列
-
+				listFormVisible: false,
 				editFormVisible: false,//编辑界面是否显示
 				editLoading: false,
 				editFormRules: {
-					name: [
+                    serviceID: [
 						{ required: true, message: '请输入服务ID', trigger: 'blur' }
 					]
 				},
-				//编辑界面数据
-				editForm: {
-					id: 0,
-					name: '',
-					sex: -1,
-					age: 0,
-					birth: '',
-					addr: ''
-				},
-
+				configList:[],
+                objConfig:[],
 				addFormVisible: false,//新增界面是否显示
 				addLoading: false,
 				addFormRules: {
-					name: [
+                    serviceID: [
 						{ required: true, message: '请输入ID', trigger: 'blur' }
 					]
 				},
 				//新增界面数据
 				addForm: {
 					name: '',
-					sex: -1,
-					age: 0,
-					birth: '',
 					addr: ''
-				}
+				},
+				serviceID:''
 
 			}
 		},
 		methods: {
-			//性别显示转换
-			formatSex: function (row, column) {
-				return row.sex == 1 ? 'true' : row.sex == 0 ? 'false' : 'undefined';
-			},
 			handleCurrentChange(val) {
 				this.page = val;
-				this.getUsers();
+				this.getServices();
 			},
-			//获取用户列表
-			getUsers() {
+			//获取服务列表 mock版本
+			getServicesMock() {
 				let para = {
 					page: this.page,
-					name: this.filters.name
+                    serviceID: this.filters.serviceID
 				};
 				this.listLoading = true;
 				//NProgress.start();
-				getUserListPage(para).then((res) => {
+				getServicesListPage(para).then((res) => {
 					this.total = res.data.total;
-					this.users = res.data.users;
+					this.servs = res.data.servs;
 					this.listLoading = false;
 					//NProgress.done();
+				});
+			},
+			//获取服务列表 访问接口版本
+			getServices() {
+                this.listLoading = true;
+                var self = this;
+                $.get('http://localhost:3100/getServices/1034541113705512871',function(data){
+                    self.servs = data;
+                    self.total = data.length;
+                    self.listLoading = false;
 				});
 			},
 			//删除
@@ -188,78 +194,117 @@
 					this.listLoading = true;
 					//NProgress.start();
 					let para = { id: row.id };
-					removeUser(para).then((res) => {
+					removeServ(para).then((res) => {
 						this.listLoading = false;
 						//NProgress.done();
 						this.$message({
 							message: '删除成功',
 							type: 'success'
 						});
-						this.getUsers();
+						this.getServices();
 					});
 				}).catch(() => {
 
 				});
 			},
-			//显示编辑界面
-			handleEdit: function (index, row) {
-				this.editFormVisible = true;
-				this.editForm = Object.assign({}, row);
-			},
-			//显示新增界面
-			handleAdd: function () {
-				this.addFormVisible = true;
-				this.addForm = {
-					name: '',
-					sex: -1,
-					age: 0,
-					birth: '',
-					addr: ''
-				};
+            //批量删除
+            batchRemove: function () {
+                var ids = this.sels.map(item => item.id).toString();
+                this.$confirm('确认删除选中记录吗？', '提示', {
+                    type: 'warning'
+                }).then(() => {
+                    this.listLoading = true;
+                    //NProgress.start();
+                    let para = { ids: ids };
+                    batchRemoveServ(para).then((res) => {
+                        this.listLoading = false;
+                        //NProgress.done();
+                        this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        });
+                        this.getServices();
+                    });
+                }).catch(() => {
+
+                });
+            },
+			//显示configList
+			showConfig: function(index, row){
+			    this.serviceID = Object.assign({}, row).server_id;
+			    this.listFormVisible = true;
+			    this.configList = Object.assign({}, row).config;
 			},
 			//编辑
-			editSubmit: function () {
-				this.$refs.editForm.validate((valid) => {
-					if (valid) {
-						this.$confirm('确认提交吗？', '提示', {}).then(() => {
-							this.editLoading = true;
-							//NProgress.start();
-							let para = Object.assign({}, this.editForm);
-							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-							editUser(para).then((res) => {
-								this.editLoading = false;
-								//NProgress.done();
-								this.$message({
-									message: '提交成功',
-									type: 'success'
-								});
-								this.$refs['editForm'].resetFields();
-								this.editFormVisible = false;
-								this.getUsers();
-							});
-						});
-					}
-				});
+			getConfig: function (cell) {
+			    this.objConfig = cell;
+                this.editFormVisible = true;
+				// this.$refs.editForm.validate((valid) => {
+				// 	if (valid) {
+				// 		this.$confirm('确认提交吗？', '提示', {}).then(() => {
+				// 			this.editLoading = true;
+				// 			//NProgress.start();
+				// 			let para = Object.assign({}, this.editForm);
+				// 			para.time = (!para.time || para.time == '') ? '' : util.formatDate.format(new Date(para.time), 'yyyy-MM-dd');
+				// 			editServ(para).then((res) => {
+				// 				this.editLoading = false;
+				// 				//NProgress.done();
+				// 				this.$message({
+				// 					message: '提交成功',
+				// 					type: 'success'
+				// 				});
+				// 				this.$refs['editForm'].resetFields();
+				// 				this.editFormVisible = false;
+				// 				this.getServicesMock();
+				// 			});
+				// 		});
+				// 	}
+				// });
 			},
-			//新增
+            //显示新增界面
+            handleAdd: function () {
+                this.addFormVisible = true;
+                this.addForm = {
+                    name: '',
+                    addr: ''
+                };
+            },
+            configSubmit: function() {
+				var config = {};
+				var objConfig = this.objConfig;
+				Object.keys(objConfig).forEach(function(key){
+					config[key] = objConfig[key];
+				});
+                $.ajax({
+                    url: "",
+                    data: config,
+                    type: "POST",
+                    dataType: "json",
+                    success: function(data) {
+                        data = $.parseJSON(data);
+                    }
+                });
+
+			},
+			//新增service
 			addSubmit: function () {
 				this.$refs.addForm.validate((valid) => {
 					if (valid) {
-						this.$confirm('确认提交吗？', '提示', {}).then(() => {
+						this.$confirm('commit confirm?', 'instruction', {}).then(() => {
 							this.addLoading = true;
 							//NProgress.start();
 							let para = Object.assign({}, this.addForm);
-							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-							addUser(para).then((res) => {
+							para.time = (!para.time || para.time == '') ? '' : util.formatDate.format(new Date(para.time), 'yyyy-MM-dd');
+							addServ(para).then((res) => {
 								this.addLoading = false;
 								//NProgress.done();
 								this.$message({
-									message: '提交成功',
+									message: 'commit success',
 									type: 'success'
 								});
 								this.$refs['addForm'].resetFields();
 								this.addFormVisible = false;
-								this.getUsers();
+								this.getServices();
 							});
 						});
 					}
@@ -267,32 +312,12 @@
 			},
 			selsChange: function (sels) {
 				this.sels = sels;
-			},
-			//批量删除
-			batchRemove: function () {
-				var ids = this.sels.map(item => item.id).toString();
-				this.$confirm('确认删除选中记录吗？', '提示', {
-					type: 'warning'
-				}).then(() => {
-					this.listLoading = true;
-					//NProgress.start();
-					let para = { ids: ids };
-					batchRemoveUser(para).then((res) => {
-						this.listLoading = false;
-						//NProgress.done();
-						this.$message({
-							message: '删除成功',
-							type: 'success'
-						});
-						this.getUsers();
-					});
-				}).catch(() => {
-
-				});
 			}
+
 		},
 		mounted() {
-			this.getUsers();
+			//this.getServicesMock();
+			this.getServices();
 		}
 	}
 
