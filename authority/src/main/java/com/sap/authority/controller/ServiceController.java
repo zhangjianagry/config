@@ -43,7 +43,7 @@ public class ServiceController {
     }
 
     @RequestMapping(value = "/createService", method = RequestMethod.POST)
-    public Service createServices(@RequestBody Service service,
+    public void createServices(@RequestBody Service service,
                                  @RequestParam("userId") String UserId) {
         if (service != null) {
             //写入service表
@@ -53,10 +53,8 @@ public class ServiceController {
                 String serviceId =  service.getServer_id();
                 restTemplate.getForObject("http://AUTHORITY/addService?userId=" + UserId + "&serviceId=" + serviceId,
                         String.class);
-                return service;
             }
         }
-        return null;
     }
 
     @RequestMapping(value = "/deleteService")
