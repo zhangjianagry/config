@@ -38,8 +38,8 @@ public class ConfigController {
     }
 
     @RequestMapping(value = "/updateConfig", method = RequestMethod.POST)
-    public String updateConfig(@RequestBody Config config, @RequestParam(value = "configId") long configId) {
-        Query query = Query.query(Criteria.where("_id").is(configId));
+    public String updateConfig(@RequestBody Config config) {
+        Query query = Query.query(Criteria.where("_id").is(config.getConfig_id()));
         Config rawConfig = mongoTemplate.findOne(query, Config.class);
         rawConfig.setKey(config.getKey());
         rawConfig.setModifiedDate(Calendar.getInstance().getTime());
