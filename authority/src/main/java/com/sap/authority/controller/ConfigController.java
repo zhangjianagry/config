@@ -16,7 +16,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Queue;
 
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost", maxAge = 3600)
 @RestController
 public class ConfigController {
     @Autowired
