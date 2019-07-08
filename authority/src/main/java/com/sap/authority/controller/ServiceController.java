@@ -60,7 +60,7 @@ public class ServiceController {
     }
 
     @RequestMapping(value = "/deleteService")
-    public String deleteServices(@RequestParam("server_id") Long serviceId,
+    public String deleteServices(@RequestParam("service_id") Long serviceId,
                                  @RequestParam("userId") long UserId) {
             //删除user service表
             return restTemplate.getForObject("http://AUTHORITY//removeService?userId=" + UserId + "&serviceId=" + serviceId,

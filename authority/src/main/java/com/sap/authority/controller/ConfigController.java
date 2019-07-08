@@ -19,6 +19,7 @@ import java.util.Queue;
 @CrossOrigin(origins = "http://localhost", maxAge = 3600)
 @RestController
 public class ConfigController {
+
     @Autowired
     private MongoTemplate mongoTemplate;
 
