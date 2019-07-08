@@ -52,24 +52,19 @@ public class UserServicesController {
     }
 
     @RequestMapping(value = "/removeService")
-    public List<Long> removeServices(@RequestParam("userId") Long userId,
+    public boolean removeServices(@RequestParam("userId") Long userId,
                                      @RequestParam("serviceId") Long serviceId) {
         Query query = new Query();
         query.addCriteria(Criteria.where("userId").is(userId));
-        List<UserServices> userServices = mongoTemplate.find(query, UserServices.class);
-        List<Long> services = userServices == null? new ArrayList<Long>() : userServices.get(0).getServices();
-        int deleteIndex = -1;
-        // 后面修改成二分搜索降低时间复杂度
-        for (int i = 0; i < services.size(); i++) {
-            if (services.get(i) == serviceId) {
-                deleteIndex = i;
-                break;
+        UserServices userService = mongoTemplate.findOne(query, UserServices.class);
+        if (userService != null) {
+            if (!userService.getServices().remove(serviceId)) {
+                return false;
             }
+            mongoTemplate.save(userService);
+            return true;
         }
-        services.remove(deleteIndex);
-        Update update = Update.update("services", services);
-        mongoTemplate.updateFirst(query, update, UserServices.class);
-        return services;
+        return false;
     }
 
 
