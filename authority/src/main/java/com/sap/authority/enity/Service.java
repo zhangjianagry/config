@@ -13,7 +13,7 @@ import java.util.*;
 public class Service {
 
     @Id
-    private long server_id;
+    private String server_id;
     @Field("name")
     private String name;
     @Field("description")
@@ -37,7 +37,7 @@ public class Service {
     private String token;
 
     public Service() {
-        this.server_id = RandomUtils.nextLong();
+        this.server_id = RandomUtils.nextLong() + "";
         this.createDate = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
         this.updateDate = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
         this.config = new ArrayList<>();
@@ -49,7 +49,7 @@ public class Service {
 
 
 
-    public long getServer_id() {
+    public String getServer_id() {
         return server_id;
     }
 

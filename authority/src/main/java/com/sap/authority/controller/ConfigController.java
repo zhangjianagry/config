@@ -24,7 +24,7 @@ public class ConfigController {
     private MongoTemplate mongoTemplate;
 
     @RequestMapping("/addConfig")
-    public String addConfig(@RequestBody Config config, @RequestParam(value = "serviceId") long serviceId) {
+    public String addConfig(@RequestBody Config config, @RequestParam(value = "serviceId") String serviceId) {
         config.setModifiedDate(Calendar.getInstance().getTime());
         mongoTemplate.insert(config);
         Query query = new Query();
@@ -38,7 +38,7 @@ public class ConfigController {
     }
 
     @RequestMapping(value = "/updateConfig", method = RequestMethod.POST)
-    public String updateConfig(@RequestBody Config config, @RequestParam(value = "serviceId") long serviceId) {
+    public String updateConfig(@RequestBody Config config, @RequestParam(value = "serviceId") String serviceId) {
         config.setModifiedDate(Calendar.getInstance().getTime());
         Query query = Query.query(Criteria.where("_id").is(config.getConfig_id()));
         Config rawConfig = mongoTemplate.findOne(query, Config.class);
@@ -63,8 +63,8 @@ public class ConfigController {
     }
 
     @RequestMapping(value = "/deleteConfig", method = RequestMethod.GET)
-    public String updateConfig(@RequestParam(value = "configId") long configId,
-                               @RequestParam(value = "serviceId") long serviceId) {
+    public String updateConfig(@RequestParam(value = "configId") String configId,
+                               @RequestParam(value = "serviceId") String serviceId) {
 
         Query query = Query.query(Criteria.where("_id").is(configId));
         mongoTemplate.remove(query, Config.class);
@@ -75,7 +75,7 @@ public class ConfigController {
         Service service = mongoTemplate.findOne(query1, Service.class);
         for (int i = 0; i < service.getConfig().size(); i++) {
             Config config = service.getConfig().get(i);
-            if (config.getConfig_id() == configId) {
+            if (config.getConfig_id().equals(configId)) {
                 service.getConfig().remove(i);
                 break;
             }

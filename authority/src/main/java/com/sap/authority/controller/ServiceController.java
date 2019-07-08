@@ -50,7 +50,7 @@ public class ServiceController {
             if (authentication(service.getToken(), UserId)) {
                 mongoTemplate.insert(service);
                 //写入user service表
-                Long serviceId =  service.getServer_id();
+                String serviceId =  service.getServer_id();
                 restTemplate.getForObject("http://AUTHORITY/addService?userId=" + UserId + "&serviceId=" + serviceId,
                         String.class);
                 return service;

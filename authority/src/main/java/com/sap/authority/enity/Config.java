@@ -11,13 +11,13 @@ import java.util.Date;
 @Document(collection = "config")
 public class Config {
     @Id
-    private long config_id;
+    private String config_id;
 
-    public long getConfig_id() {
+    public String getConfig_id() {
         return config_id;
     }
 
-    public void setConfig_id(long config_id) {
+    public void setConfig_id(String config_id) {
         this.config_id = config_id;
     }
 
@@ -84,6 +84,6 @@ public class Config {
 
 
     public Config() {
-        this.config_id = RandomUtils.nextLong();
+        this.config_id = RandomUtils.nextLong()+"";
     }
 }
